@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 import {Moment} from "moment";
 import cx from 'classnames';
 
@@ -19,18 +19,17 @@ interface Props {
 export const MOCEvent = (props: Props) => {
     const {isFirstChunk, isLastChunk, wrapText, text, time} = props.data;
 
-    const contentClasses = cx(s.Highlight, {
+    const contentClasses = useMemo(() => cx(s.Highlight, {
         [s.Highlight_leftMargin]: isFirstChunk,
         [s.Highlight_rightMargin]: isLastChunk,
-    });
-    const textClasses = cx(s.Text, {
+    }), [isFirstChunk, isLastChunk]);
+    const textClasses = useMemo(() => cx(s.Text, {
         [s.Text_wrapped]: wrapText,
-    });
-    const timeString = time.format("HH:mm");
-
-    const renderText = wrapText && <div className={s.Time}>
+    }), [wrapText]);
+    const timeString = useMemo(() => time.format("HH:mm"), [time]);
+    const renderText = useMemo(() => wrapText && <div className={s.Time}>
         {timeString}
-    </div>;
+    </div>, [timeString, wrapText]);
 
     return (
         <div className={s.Root}>
