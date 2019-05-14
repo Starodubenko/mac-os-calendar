@@ -1,0 +1,40 @@
+.Root {
+  display: flex;
+  height: 22px;
+}
+
+.Highlight {
+  background-color: #c7ecfe;
+  display: flex;
+  flex-grow: 1;
+
+  &_leftMargin {
+    margin-left: 6px;
+  }
+
+  &_rightMargin {
+    margin-right: 6px;
+  }
+}
+
+.TextContainer {
+  display: flex;
+  flex-grow: 1;
+  justify-content: space-between;
+  width: 1px;
+  font-size: 16px;
+  margin-left: 22px;
+}
+
+.Text {
+  white-space: nowrap;
+
+  &_wrapped {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.Time {
+  margin-right: 4px;
+}
