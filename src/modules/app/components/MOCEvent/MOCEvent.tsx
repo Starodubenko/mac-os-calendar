@@ -1,10 +1,11 @@
-import React, {useMemo} from 'react';
+import React, {forwardRef, useMemo} from 'react';
 import {Moment} from "moment";
 import cx from 'classnames';
 
 import s from './MOCEvent.module.scss';
 
 export interface CalendarEvent {
+    id: string;
     time: Moment;
     isFirstChunk: boolean;
     isLastChunk: boolean;
@@ -16,7 +17,7 @@ interface Props {
     data: CalendarEvent
 }
 
-export const MOCEvent = (props: Props) => {
+export const MOCEvent = forwardRef((props: Props, ref: React.MutableRefObject<HTMLDivElement>) => {
     const {isFirstChunk, isLastChunk, wrapText, text, time} = props.data;
 
     const contentClasses = useMemo(() => cx(s.Highlight, {
@@ -32,15 +33,16 @@ export const MOCEvent = (props: Props) => {
     </div>, [timeString, wrapText]);
 
     return (
-        <div className={s.Root}>
+        <div className={s.Root} ref={ref}>
             <div className={contentClasses}>
-                <div className={s.TextContainer}>
-                    <div className={textClasses}>
-                        {text}
-                    </div>
-                    {renderText}
+
+            </div>
+            <div className={s.TextContainer}>
+                <div className={textClasses}>
+                    {text}
                 </div>
+                {renderText}
             </div>
         </div>
     )
-};
+});

@@ -1,10 +1,10 @@
-import React from 'react';
+import React, {ChangeEvent, SyntheticEvent, useCallback, useState} from 'react';
 import {connect} from "react-redux";
 import {RootState} from "../../../../store";
+import moment from "moment";
+import {MOCEventList} from "../../MOCEventList";
 
 import s from './MainPage.module.scss';
-import {MOCEvent} from "../../MOCEvent";
-import moment from "moment";
 
 interface StateProps {
 }
@@ -18,8 +18,9 @@ export const MainPageComponent = (props: Props) => {
     const dateWithTime = moment();
     const dateWithoutTime = moment().hours(0).minutes(0).seconds(0);
 
-    const eventData = [
+    const eventListData = [
         {
+            id: Math.round(Math.random() * 1000).toString(),
             time: dateWithoutTime,
             isFirstChunk: true,
             isLastChunk: true,
@@ -27,6 +28,7 @@ export const MainPageComponent = (props: Props) => {
             wrapText: false,
         },
         {
+            id: Math.round(Math.random() * 1000).toString(),
             time: dateWithoutTime,
             isFirstChunk: false,
             isLastChunk: true,
@@ -34,6 +36,7 @@ export const MainPageComponent = (props: Props) => {
             wrapText: false,
         },
         {
+            id: Math.round(Math.random() * 1000).toString(),
             time: dateWithoutTime,
             isFirstChunk: true,
             isLastChunk: false,
@@ -41,6 +44,7 @@ export const MainPageComponent = (props: Props) => {
             wrapText: false,
         },
         {
+            id: Math.round(Math.random() * 1000).toString(),
             time: dateWithoutTime,
             isFirstChunk: true,
             isLastChunk: false,
@@ -48,6 +52,7 @@ export const MainPageComponent = (props: Props) => {
             wrapText: !!(dateWithoutTime.hours() || dateWithoutTime.minutes() || dateWithoutTime.seconds()),
         },
         {
+            id: Math.round(Math.random() * 1000).toString(),
             time: dateWithTime,
             isFirstChunk: true,
             isLastChunk: false,
@@ -55,6 +60,7 @@ export const MainPageComponent = (props: Props) => {
             wrapText: !!(dateWithTime.hours() || dateWithTime.minutes() || dateWithTime.seconds()),
         },
         {
+            id: Math.round(Math.random() * 1000).toString(),
             time: dateWithoutTime,
             isFirstChunk: true,
             isLastChunk: false,
@@ -63,11 +69,15 @@ export const MainPageComponent = (props: Props) => {
         },
     ];
 
-    const events = eventData.map(event => (<MOCEvent data={event}/>));
+    const [listHeight, setListHeight] = useState(100);
+    const onHeightInputChange = useCallback((event: SyntheticEvent<HTMLInputElement>) => {
+        setListHeight(+event.currentTarget.value);
+    }, []);
 
     return (
         <div className={s.Root}>
-            {events}
+            <input type="text" value={listHeight} onChange={onHeightInputChange}/>
+            <MOCEventList list={eventListData} allowedHeight={listHeight}/>
         </div>
     )
 };
