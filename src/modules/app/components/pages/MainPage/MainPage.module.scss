@@ -5,4 +5,21 @@
   padding-top: 100px;
 }
 
+.Cell {
+  display: flex;
+  flex-direction: column;
+  height: 100px;
+  width: 100px;
+  background-color: red;
+}
 
+.CellHeader {
+  height: 24px;
+  background-color: chocolate;
+  flex-shrink: 0;
+}
+
+.EventListWrapper {
+  height: 1px;
+  flex-grow: 1;
+}
