@@ -6,6 +6,7 @@ import {MOCEventList} from "../../MOCEventList";
 
 import s from './MainPage.module.scss';
 import {MOCResizeableBlock} from "../../MOCResizeableBlock";
+import { ICell, MOCCell } from '../../MOCCell/MOCCell';
 
 interface StateProps {
 }
@@ -69,6 +70,30 @@ const eventListData = [
     },
 ];
 
+const cellData = [
+    {
+        date: moment(),
+        isHoliday: false,
+        isCurrentMonthDay: true,
+        isCurrentDay: false,
+        eventList:[],
+    },
+    {
+        date: moment(new Date()),
+        isHoliday: false,
+        isCurrentMonthDay: true,
+        isCurrentDay: true,
+        eventList: eventListData,
+    },
+    {
+        date: moment(),
+        isHoliday: true,
+        isCurrentMonthDay: true,
+        isCurrentDay: false,
+        eventList: [],
+    },
+]
+
 export const MainPageComponent = (props: Props) => {
     const [listHeight, setListHeight] = useState();
     const onResizeHandler = useCallback((height: number) => {
@@ -77,12 +102,16 @@ export const MainPageComponent = (props: Props) => {
 
     return (
         <div className={s.Root}>
-            <div className={s.Cell}>
+            {/* <div className={s.Cell}>
                 <div className={s.CellHeader} />
                 <MOCResizeableBlock className={s.EventListWrapper} onResize={onResizeHandler}>
                     <MOCEventList list={eventListData} allowedHeight={listHeight}/>
                 </MOCResizeableBlock>
-            </div>
+            </div> */}
+
+            {/* <MOCCell data={cellData[0]}/> */}
+            <MOCCell data={cellData[1]}/>
+            {/* <MOCCell data={cellData[2]}/> */}
         </div>
     )
 };
