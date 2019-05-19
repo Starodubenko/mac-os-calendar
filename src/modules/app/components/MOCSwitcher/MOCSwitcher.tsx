@@ -1,5 +1,4 @@
 import React, {useCallback, useMemo} from 'react';
-import moment from 'moment';
 import cx from 'classnames';
 
 import s from './MOCSwitcher.module.scss';
