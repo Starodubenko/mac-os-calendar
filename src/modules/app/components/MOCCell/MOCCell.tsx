@@ -51,8 +51,6 @@ export const MOCCell: FunctionComponent<Props> = ({data: {isHoliday, isCurrentDa
 
     return (
         <div className={rootClasses}>
-            <div className={s.TopBorder}/>
-            <div className={s.RightBorder}/>
             <div className={s.Day}>
                 <div className={dayNumberClasses}>
                     {dayNumberString}

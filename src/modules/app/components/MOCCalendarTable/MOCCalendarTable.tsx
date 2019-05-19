@@ -59,12 +59,27 @@ const convertVacationData = (apiData): IApiEvent[] => { //todo Sorting on each d
   })
 }
 
+const isHoliday = (date: Moment) => {
+    return date.weekday() === 6 || date.weekday() === 0;
+}
+
+const isLastWeekDay = (date: Moment) => {
+    return date.weekday() === 0;
+}
+
+const isCurrentMonthDay = (date: Moment, currentMonthNumber: number) => {
+    return date.month() === currentMonthNumber;
+}
+
+const isCurrentDay = (date: Moment) => {
+    return date.isSame(moment(), 'date');
+}
+
 const getEventList = (day: Moment, eventDataList: IApiEvent[]): CalendarEvent[] => {
     const sortetByLasts = eventDataList.sort((a, b) => a.startDate.diff(a.endDate, 'days') - b.startDate.diff(b.endDate, 'days'))
-    return eventDataList.reduce((acc, evendData) => {
+    return sortetByLasts.reduce((acc, evendData) => {
         if (day.isBetween(evendData.startDate, evendData.endDate, 'date', '[]')) {
             const isZeroTime = !!(day.hours() && day.minutes() && day.seconds() && day.milliseconds());
-            const isLastWeekDay = day.weekday() === 0;
             const isFirstWeekDay = day.weekday() === 1;
             const isFirstChunk = evendData.startDate.isSame(day, 'date');
             const isLastChunk = evendData.endDate.isSame(day, 'date');
@@ -75,23 +90,11 @@ const getEventList = (day: Moment, eventDataList: IApiEvent[]): CalendarEvent[] 
                 isFirstChunk,
                 isLastChunk,
                 text: (isFirstChunk || isFirstWeekDay) && evendData.name,
-                wrapText: isZeroTime || isLastWeekDay && isFirstChunk,
+                wrapText: isZeroTime || isLastWeekDay(day) && isFirstChunk,
             });
         }
         return acc;
     }, [])
-}
-
-const isHoliday = (date: Moment) => {
-    return date.weekday() === 6 || date.weekday() === 0;
-}
-
-const isCurrentMonthDay = (date: Moment, currentMonthNumber: number) => {
-    return date.month() === currentMonthNumber;
-}
-
-const isCurrentDay = (date: Moment) => {
-    return date.isSame(moment(), 'date');
 }
 
 const getCellData = (date: Moment, currentMonth: number): ICell => {
@@ -104,7 +107,7 @@ const getCellData = (date: Moment, currentMonth: number): ICell => {
     }
 }
 
-const getCalendarCells = (currentDate: Moment, currentMonthNumber: number) => {
+const getCalendarCells = (currentDate: Moment, currentMonthNumber: number) => { // todo fix calculating. To rework based on only current month
     const totalCellsCount = 7 * 6
         const currentMonthDayNumber = currentDate.date();
         const firstMonthDate = currentDate.clone().subtract(currentMonthDayNumber - 1, 'days');
@@ -161,7 +164,15 @@ export const MOCCalendarTable: FunctionComponent<Props> = (props) => {
     }, []);
 
     const renderContent = useMemo(() => calendarCells.map(cellData => {
-        return <MOCCell key={cellData.date.toISOString()} data={cellData}/>
+        const rightBorder = !isLastWeekDay(cellData.date) && <div className={s.RightBorder}/>;
+
+        return (
+            <div className={s.Cell}>
+                <div className={s.TopBorder}/>
+                {rightBorder}
+                <MOCCell key={cellData.date.toISOString()} data={cellData}/>
+            </div>
+        )
     }), [calendarCells])
 
     const switcherHandler = (value: number, dateUnit: string) => {

@@ -34,9 +34,7 @@ export const MOCEvent = forwardRef((props: Props, ref: React.MutableRefObject<HT
 
     return (
         <div className={s.Root} ref={ref}>
-            <div className={contentClasses}>
-
-            </div>
+            <div className={contentClasses} />
             <div className={s.TextContainer}>
                 <div className={textClasses}>
                     {text}
