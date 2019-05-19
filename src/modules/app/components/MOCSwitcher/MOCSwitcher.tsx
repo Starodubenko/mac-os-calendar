@@ -5,16 +5,13 @@ import cx from 'classnames';
 import s from './MOCSwitcher.module.scss';
 
 interface Props {
-    dateUnit: string;
     nowTitle: string;
-    onChangeHandler: (value: number, dateUnit: string) => void;
+    onChangeHandler: (value: number) => void;
 }
 
 export const MOCSwitcher = (props: Props) => {
     const clickHandler = useCallback((number: number) => () => {
-        const result = number === 0 ? moment().get(props.dateUnit as any) : number;
-
-        props.onChangeHandler(result, props.dateUnit);
+        props.onChangeHandler(number);
     }, [])
 
     const middleButtonClasses = useMemo(() => cx(s.Button, s.Middle), [])
