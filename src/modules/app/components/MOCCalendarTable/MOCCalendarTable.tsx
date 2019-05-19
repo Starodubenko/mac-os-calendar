@@ -1,11 +1,10 @@
 import React, {FunctionComponent, useMemo, useState} from 'react';
-import cx from 'classnames';
 import moment, { Moment } from 'moment'
-
-import s from './MOCCalendarTable.module.scss';
 import { MOCCell, ICell } from '../MOCCell/MOCCell';
 import { CalendarEvent } from '../MOCEvent';
-import { truncate } from 'fs';
+import { MOCSwitcher } from '../MOCSwitcher';
+
+import s from './MOCCalendarTable.module.scss';
 
 interface Props {
     
@@ -105,12 +104,8 @@ const getCellData = (date: Moment, currentMonth: number): ICell => {
     }
 }
 
-export const MOCCalendarTable: FunctionComponent<Props> = (props) => {
-    const [currentDate, setCurrentDate] = useState<Moment>(moment().hours(0).minutes(0).seconds(0).milliseconds(0));
-    const [currentMonth, setCurrentMonth] = useState<number>(currentDate.month());
-
-    const calendarCells = useMemo<ICell[]>(() => {
-        const totalCellsCount = 7 * 6
+const getCalendarCells = (currentDate: Moment, currentMonthNumber: number) => {
+    const totalCellsCount = 7 * 6
         const currentMonthDayNumber = currentDate.date();
         const firstMonthDate = currentDate.clone().subtract(currentMonthDayNumber - 1, 'days');
         const firstMonthWeekDayNumber = firstMonthDate.weekday();
@@ -121,31 +116,39 @@ export const MOCCalendarTable: FunctionComponent<Props> = (props) => {
         const previousMonthCells = [];
         for(let i = 1; i <= firstMonthWeekDayNumber - 1; i++) {
             const nextDate = firstMonthDate.clone().subtract(i, 'days');
-            const cellData = getCellData(nextDate, currentMonth);
+            const cellData = getCellData(nextDate, currentMonthNumber);
             previousMonthCells.unshift(cellData);
         }
 
         const currentMonthCells = [];
         for(let i = 0; i < daysInCurrentMonth; i++) {
             const nextDate = firstMonthDate.clone().add(i, 'days');
-            const cellData = getCellData(nextDate, currentMonth);
+            const cellData = getCellData(nextDate, currentMonthNumber);
             currentMonthCells.push(cellData);
         }
 
         const nextMonthCells = [];
         for(let i = 1; i <= leftDays; i++) {
             const nextDate = lastCurrentMonthDay.clone().add(i, 'days');
-            const cellData = getCellData(nextDate, currentMonth);
+            const cellData = getCellData(nextDate, currentMonthNumber);
             nextMonthCells.push(cellData);
         }
         
         return [...previousMonthCells, ...currentMonthCells, ...nextMonthCells];
-    }, [currentMonth])
+}
+
+export const MOCCalendarTable: FunctionComponent<Props> = (props) => {
+    const [currentDate, setCurrentDate] = useState<Moment>(moment().hours(0).minutes(0).seconds(0).milliseconds(0));
+    const [currentMonth, setCurrentMonth] = useState<number>(currentDate.month());
+    const calendarCells = useMemo<ICell[]>(() => getCalendarCells(currentDate, currentMonth), [currentMonth])
 
     const renderCurrentMonthYear = useMemo(() => {
         const currentDate = moment();
 
-        return `${currentDate.format('MMM')} ${currentDate.year()}`
+        return <>
+            <span className={s.HeaderMonth}>{currentDate.format('MMM')}</span>
+            <span className={s.HeaderYear}>{currentDate.year()}</span>
+        </>
     }, []);
     const renderTableHeader = useMemo(() => {
         const result = [];
@@ -161,12 +164,19 @@ export const MOCCalendarTable: FunctionComponent<Props> = (props) => {
         return <MOCCell key={cellData.date.toISOString()} data={cellData}/>
     }), [calendarCells])
 
+    const switcherHandler = (value: number, dateUnit: string) => {
+        console.log(value, dateUnit);
+        setCurrentMonth(value);
+    }
+
     return (
         <div className={s.Root}>
             <div className={s.Header}>
                 <div className={s.SubHeader}>
                     <div className={s.CurrentMonthYear}>{renderCurrentMonthYear}</div>
-                    <div className={s.TableControl}></div>
+                    <div className={s.TableControl}>
+                        <MOCSwitcher nowTitle="Current month" dateUnit="month" onChangeHandler={switcherHandler} />
+                    </div>
                 </div>
                 <div className={s.TableHeader}>
                     {renderTableHeader}

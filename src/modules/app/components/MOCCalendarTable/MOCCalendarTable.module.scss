@@ -11,10 +11,10 @@
 }
 
 .SubHeader {
+  display: flex;
   flex-grow: 1;
   justify-content: space-between;
-  padding: 20px;
-  background-color: blue;
+  padding: 20px 20px 0
 }
 
 .TableHeader {
@@ -30,7 +30,14 @@
 }
 
 .CurrentMonthYear {
-  font-size: 20px;
+  font-size: 30px;
+
+  .HeaderMonth {
+    font-weight: bold;
+  }
+  .HeaderYear {
+    margin-left: 6px;
+  }
 }
 
 .TableControl {

@@ -1,0 +1,23 @@
+.Root {
+  display: flex;
+}
+
+.Button {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+
+  border-radius: 4px;
+  border: 1px solid  #e2e2e2;
+  box-shadow: 0px 1px 3px 0px #e2e2e2;
+  cursor: pointer;
+}
+
+.Middle {
+  width: auto;
+  padding: 0 8px;
+  margin: 0 1px;
+}
