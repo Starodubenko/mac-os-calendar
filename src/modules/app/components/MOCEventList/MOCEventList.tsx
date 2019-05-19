@@ -63,8 +63,6 @@ export const MOCEventList = (props: Props) => {
         </div>: ""
     ), [hiddenCount]);
 
-
-    debugger;
     return (
         <div className={s.Root} ref={listContainerRef}>
             {renderList}

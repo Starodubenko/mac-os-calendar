@@ -7,6 +7,7 @@ import {MOCEventList} from "../../MOCEventList";
 import s from './MainPage.module.scss';
 import {MOCResizeableBlock} from "../../MOCResizeableBlock";
 import { ICell, MOCCell } from '../../MOCCell/MOCCell';
+import { MOCCalendarTable } from '../../MOCCalendarTable';
 
 interface StateProps {
 }
@@ -102,16 +103,8 @@ export const MainPageComponent = (props: Props) => {
 
     return (
         <div className={s.Root}>
-            {/* <div className={s.Cell}>
-                <div className={s.CellHeader} />
-                <MOCResizeableBlock className={s.EventListWrapper} onResize={onResizeHandler}>
-                    <MOCEventList list={eventListData} allowedHeight={listHeight}/>
-                </MOCResizeableBlock>
-            </div> */}
-
-            {/* <MOCCell data={cellData[0]}/> */}
-            <MOCCell data={cellData[1]}/>
-            {/* <MOCCell data={cellData[2]}/> */}
+            {/* <MOCCell data={cellData[1]}/> */}
+            <MOCCalendarTable />
         </div>
     )
 };

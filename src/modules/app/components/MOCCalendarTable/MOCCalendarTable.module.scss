@@ -1,0 +1,54 @@
+.Root {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.Header {
+  height: 95px;
+  border-bottom: 2px solid #C8C8CD; 
+}
+
+.SubHeader {
+  flex-grow: 1;
+  justify-content: space-between;
+  padding: 20px;
+  background-color: blue;
+}
+
+.TableHeader {
+  display: flex;
+  height: 32px;
+}
+
+.TableHeaderWeekDay {
+  display: flex;
+  flex-grow: 1;
+  justify-content: flex-end;
+  padding: 10px 15px;
+}
+
+.CurrentMonthYear {
+  font-size: 20px;
+}
+
+.TableControl {
+
+}
+
+.Content {
+  display: flex;
+  flex-flow: wrap;
+  flex-grow: 1;
+}
+
+.Cell {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: solid 1px black;
+  box-sizing: border-box;
+  width: calc(100% / 7);
+  height: calc(100% / 6);
+}

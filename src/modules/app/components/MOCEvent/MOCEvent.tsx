@@ -28,7 +28,7 @@ export const MOCEvent = forwardRef((props: Props, ref: React.MutableRefObject<HT
         [s.Text_wrapped]: wrapText,
     }), [wrapText]);
     const timeString = useMemo(() => time.format("HH:mm"), [time]);
-    const renderText = useMemo(() => wrapText && <div className={s.Time}>
+    const renderTime = useMemo(() => wrapText && <div className={s.Time}>
         {timeString}
     </div>, [timeString, wrapText]);
 
@@ -41,7 +41,7 @@ export const MOCEvent = forwardRef((props: Props, ref: React.MutableRefObject<HT
                 <div className={textClasses}>
                     {text}
                 </div>
-                {renderText}
+                {renderTime}
             </div>
         </div>
     )

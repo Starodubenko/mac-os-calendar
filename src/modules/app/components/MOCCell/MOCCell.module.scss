@@ -6,36 +6,41 @@
   width: calc(100% / 7);
   height: calc(100% / 6);
   background-color: #FFFFFF;
-  min-height: 160px;
-  min-width: 170px;
   color: #323232;
+
   &.Holiday{
     background-color: #F5F5F5;
     color: #888888;
   }
-  &.notCurrentMonth{
-    color: #C5C5C5;
-  }
+
   .Day{
     display: flex;
     flex-shrink: 0;
     justify-content: flex-end;
     padding: 3px;
+
     .DayNumber{
-      display: block;
+      display: flex;
+      width: 30px;
+      height: 30px;
+      align-items: center;
+      justify-content: center;
+
       &_current{
-        width: 30px;
-        height: 30px;
+        color: black;
         border-radius: 50%;
         background-color: #FF3935;
-        margin-left: auto;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+      }
+
+      &_notCurrenWithMonth {
+        width: initial;
       }
     }
     .firstDay{
-      margin-left: 8px;
+      display: flex;
+      align-items: center;
+  
+      margin-left: 2px;
     }
   }
 }
@@ -62,4 +67,8 @@
   top: 0;
   bottom: 0;
   border-right: 1px solid #C8C8CD;
+}
+
+.NotCurrentMonth{
+  color: #C5C5C5;
 }
