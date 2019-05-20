@@ -50,13 +50,11 @@ interface IApiEvent {
 }
 
 function convertVacationData(apiData): IApiEvent[] { //todo Sorting on each date based in term of vacation
-  return apiData.map(({name, startDate, endDate}) => {
-      return {
-          name,
-          startDate: moment(startDate, 'DD.MM.YYYY', true),
-          endDate: moment(endDate, 'DD.MM.YYYY', true),
-      }
-  })
+    return apiData.map(({name, startDate, endDate}) => ({
+        name,
+        startDate: moment(startDate, 'DD.MM.YYYY', true),
+        endDate: moment(endDate, 'DD.MM.YYYY', true),
+    }))
 }
 
 function isHoliday(date: Moment) {
@@ -108,9 +106,9 @@ function getCellData(date: Moment, currentMonth: number, eventDataList: IApiEven
     }
 }
 
-function getCalendarCells(currentMonthNumber: number, eventDataList: IApiEvent[]): ICell[] { // todo rework using memoization based on (currentMonthNumber and getCellData)
+function getCalendarCells(currentYearNumber: number,currentMonthNumber: number, eventDataList: IApiEvent[]): ICell[] { // todo rework using memoization based on (currentMonthNumber and getCellData)
     const totalCellsCount = 7 * 6
-    const currentMonthDate = moment().set('month', currentMonthNumber).hours(0).minutes(0).seconds(0).milliseconds(0);
+    const currentMonthDate = moment().set('year', currentYearNumber).set('month', currentMonthNumber).hours(0).minutes(0).seconds(0).milliseconds(0);
     const firstMonthDate = currentMonthDate.clone().set('date', 1);
     const firstMonthWeekDayNumber = firstMonthDate.weekday();
     const daysInCurrentMonth = currentMonthDate.daysInMonth();
@@ -147,7 +145,7 @@ export const MOCCalendarTable: FunctionComponent<Props> = (props) => {
     useEffect(() => {
         currentMonthYearRef.current = currentMonthYear;
     });
-    const calendarCells = getCalendarCells(currentMonthYear.month(), convertVacationData(vacationData))
+    const calendarCells = getCalendarCells(currentMonthYear.year(), currentMonthYear.month(), convertVacationData(vacationData))
 
     const renderCurrentMonthYear = useMemo(() => {
         return <>
