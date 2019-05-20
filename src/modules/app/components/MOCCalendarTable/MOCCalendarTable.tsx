@@ -87,7 +87,7 @@ function getEventList(day: Moment, eventDataList: IApiEvent[]): CalendarEvent[] 
                 time: day,
                 isFirstChunk,
                 isLastChunk,
-                text: (isFirstChunk || isFirstWeekDay) && evendData.name,
+                text: (isFirstChunk || isFirstWeekDay) ? evendData.name : '',
                 wrapText: isZeroTime || isLastWeekDay(day) && isFirstChunk,
             });
         }
