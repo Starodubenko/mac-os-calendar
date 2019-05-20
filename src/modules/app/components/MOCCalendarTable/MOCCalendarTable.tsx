@@ -179,7 +179,7 @@ export const MOCCalendarTable: FunctionComponent<Props> = (props) => {
     const switcherHandler = useCallback((value: number) => {
         const newDate = currentMonthYearRef.current.clone();
         if(value === 0) {
-            setCurrentMonthYear(newDate);
+            setCurrentMonthYear(moment());
         } else {
             setCurrentMonthYear(newDate.add(value, 'month'));
         }
