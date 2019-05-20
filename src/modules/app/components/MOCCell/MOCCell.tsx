@@ -49,6 +49,12 @@ export const MOCCell: FunctionComponent<Props> = ({data: {isHoliday, isCurrentDa
         </div>
     }, [dayNumberString]);
 
+    const renderEventList = () => (
+        !!eventList.length && <MOCResizeableBlock className={s.EventListWrapper} onResize={onResizeHandler}>
+            <MOCEventList list={eventList} allowedHeight={height}/>
+        </MOCResizeableBlock>
+    );
+
     return (
         <div className={rootClasses}>
             <div className={s.Day}>
@@ -57,9 +63,7 @@ export const MOCCell: FunctionComponent<Props> = ({data: {isHoliday, isCurrentDa
                 </div>
                 {renderMonthString}
             </div>
-            <MOCResizeableBlock className={s.EventListWrapper} onResize={onResizeHandler}>
-                <MOCEventList list={eventList} allowedHeight={height}/>
-            </MOCResizeableBlock>
+            {renderEventList()}
         </div>
     )
 };

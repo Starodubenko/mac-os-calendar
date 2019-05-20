@@ -49,7 +49,7 @@ interface IApiEvent {
     endDate: Moment;
 }
 
-const convertVacationData = (apiData): IApiEvent[] => { //todo Sorting on each date based in term of vacation
+function convertVacationData(apiData): IApiEvent[] { //todo Sorting on each date based in term of vacation
   return apiData.map(({name, startDate, endDate}) => {
       return {
           name,
@@ -59,23 +59,23 @@ const convertVacationData = (apiData): IApiEvent[] => { //todo Sorting on each d
   })
 }
 
-const isHoliday = (date: Moment) => {
+function isHoliday(date: Moment) {
     return date.weekday() === 6 || date.weekday() === 0;
 }
 
-const isLastWeekDay = (date: Moment) => {
+function isLastWeekDay(date: Moment) {
     return date.weekday() === 0;
 }
 
-const isCurrentMonthDay = (date: Moment, currentMonthNumber: number) => {
+function isCurrentMonthDay(date: Moment, currentMonthNumber: number) {
     return date.month() === currentMonthNumber;
 }
 
-const isCurrentDay = (date: Moment) => {
+function isCurrentDay(date: Moment) {
     return date.isSame(moment(), 'date');
 }
 
-const getEventList = (day: Moment, eventDataList: IApiEvent[]): CalendarEvent[] => {
+function getEventList(day: Moment, eventDataList: IApiEvent[]): CalendarEvent[] {
     const sortetByLasts = eventDataList.sort((a, b) => a.startDate.diff(a.endDate, 'days') - b.startDate.diff(b.endDate, 'days'))
     return sortetByLasts.reduce((acc, evendData) => {
         if (day.isBetween(evendData.startDate, evendData.endDate, 'date', '[]')) {
@@ -97,7 +97,8 @@ const getEventList = (day: Moment, eventDataList: IApiEvent[]): CalendarEvent[] 
     }, [])
 }
 
-const getCellData = (date: Moment, currentMonth: number): ICell => {
+
+function getCellData(date: Moment, currentMonth: number, eventDataList: IApiEvent[]): ICell {
     return {
         date: date,
         isHoliday: isHoliday(date),
@@ -107,7 +108,7 @@ const getCellData = (date: Moment, currentMonth: number): ICell => {
     }
 }
 
-const getCalendarCells = (currentMonthNumber: number) => { // todo rework using memoization based on (currentMonthNumber and getCellData)
+function getCalendarCells(currentMonthNumber: number, eventDataList: IApiEvent[]): ICell[] { // todo rework using memoization based on (currentMonthNumber and getCellData)
     const totalCellsCount = 7 * 6
     const currentMonthDate = moment().set('month', currentMonthNumber).hours(0).minutes(0).seconds(0).milliseconds(0);
     const firstMonthDate = currentMonthDate.clone().set('date', 1);
@@ -119,21 +120,21 @@ const getCalendarCells = (currentMonthNumber: number) => { // todo rework using 
     const previousMonthCells = [];
     for(let i = 1; i <= firstMonthWeekDayNumber - 1; i++) {
         const nextDate = firstMonthDate.clone().subtract(i, 'days');
-        const cellData = getCellData(nextDate, currentMonthNumber);
+        const cellData = getCellData(nextDate, currentMonthNumber, eventDataList);
         previousMonthCells.unshift(cellData);
     }
     
     const currentMonthCells = [];
     for(let i = 0; i < daysInCurrentMonth; i++) {
         const nextDate = firstMonthDate.clone().add(i, 'days');
-        const cellData = getCellData(nextDate, currentMonthNumber);
+        const cellData = getCellData(nextDate, currentMonthNumber, eventDataList);
         currentMonthCells.push(cellData);
     }
     
     const nextMonthCells = [];
     for(let i = 1; i <= leftDays; i++) {
         const nextDate = lastCurrentMonthDay.clone().add(i, 'days');
-        const cellData = getCellData(nextDate, currentMonthNumber);
+        const cellData = getCellData(nextDate, currentMonthNumber, eventDataList);
         nextMonthCells.push(cellData);
     }
     
@@ -146,7 +147,7 @@ export const MOCCalendarTable: FunctionComponent<Props> = (props) => {
     useEffect(() => {
         currentMonthYearRef.current = currentMonthYear;
     });
-    const calendarCells = useMemo<ICell[]>(() => getCalendarCells(currentMonthYear.month()), [currentMonthYear])
+    const calendarCells = getCalendarCells(currentMonthYear.month(), convertVacationData(vacationData))
 
     const renderCurrentMonthYear = useMemo(() => {
         return <>
@@ -168,7 +169,7 @@ export const MOCCalendarTable: FunctionComponent<Props> = (props) => {
         const rightBorder = !isLastWeekDay(cellData.date) && <div className={s.RightBorder}/>;
 
         return (
-            <div className={s.Cell}>
+            <div className={s.Cell} key={JSON.stringify(cellData)}>
                 <div className={s.TopBorder}/>
                 {rightBorder}
                 <MOCCell key={cellData.date.toISOString()} data={cellData}/>
