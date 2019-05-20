@@ -110,7 +110,7 @@ function getCalendarCells(currentYearNumber: number,currentMonthNumber: number, 
     const totalCellsCount = 7 * 6
     const currentMonthDate = moment().set('year', currentYearNumber).set('month', currentMonthNumber).hours(0).minutes(0).seconds(0).milliseconds(0);
     const firstMonthDate = currentMonthDate.clone().set('date', 1);
-    const firstMonthWeekDayNumber = firstMonthDate.weekday();
+    const firstMonthWeekDayNumber = firstMonthDate.weekday() === 0 ? 7 : firstMonthDate.weekday();
     const daysInCurrentMonth = currentMonthDate.daysInMonth();
     const lastCurrentMonthDay = currentMonthDate.clone().set('date', daysInCurrentMonth);
     const leftDays = totalCellsCount - (daysInCurrentMonth + firstMonthWeekDayNumber - 1);
