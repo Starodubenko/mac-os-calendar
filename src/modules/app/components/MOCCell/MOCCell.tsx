@@ -1,7 +1,6 @@
-import React, {FunctionComponent, useMemo, useState, useCallback} from 'react';
+import React, {FunctionComponent, useMemo} from 'react';
 import cx from 'classnames';
 import { Moment } from "moment";
-import { MOCResizeableBlock, useResizeDimentions } from '../MOCResizeableBlock';
 import { MOCEventList } from '../MOCEventList';
 import { CalendarEvent } from '../MOCEvent';
 
@@ -16,14 +15,23 @@ export interface ICell {
     eventList: CalendarEvent[];
 }
 
-interface Props {
-    data: ICell
+export interface ICellDimensions {
+    height: number;
+    width: number;
 }
 
-export const MOCCell: FunctionComponent<Props> = ({data: {isHoliday, isCurrentDay, date, eventList, isCurrentMonthDay}}) => {
-    const dayNumberString = useMemo(() => date.date(), [date]);
-    const {height, onResizeHandler} = useResizeDimentions();
+interface Props {
+    data: ICell
+    dimensions: ICellDimensions
+}
 
+export const MOCCell: FunctionComponent<Props> = ({
+    data: {isHoliday, isCurrentDay, date, eventList, isCurrentMonthDay},
+    dimensions: {height, width}
+}) => {
+    const cellHeaderHeight = 30;
+    const cellEventListHeight = height - cellHeaderHeight;
+    const dayNumberString = useMemo(() => date.date(), [date]);
     const rootClasses = useMemo(() =>
             cx(s.Root, {
                 [s.Holiday]: isHoliday,
@@ -50,14 +58,14 @@ export const MOCCell: FunctionComponent<Props> = ({data: {isHoliday, isCurrentDa
     }, [dayNumberString]);
 
     const renderEventList = () => (
-        !!eventList.length && <MOCResizeableBlock className={s.EventListWrapper} onResize={onResizeHandler}>
-            <MOCEventList list={eventList} allowedHeight={height}/>
-        </MOCResizeableBlock>
+        !!eventList.length && <MOCEventList list={eventList} allowedHeight={cellEventListHeight}/>
     );
 
     return (
-        <div className={rootClasses}>
-            <div className={s.Day}>
+        <div className={rootClasses} style={{height, width}}>
+            <div className={s.TopBorder}/>
+            <div className={s.RightBorder}/>
+            <div className={s.Day} >
                 <div className={dayNumberClasses}>
                     {dayNumberString}
                 </div>

@@ -17,11 +17,10 @@ const useHiddenCount = (
 
     useLayoutEffect(() => {
         const listContainerHeight = listCount * itemHeight;
-        const updatedAvailableHeight = hiddenCount !== 0 ? availableHeight - itemHeight : availableHeight;
         const result = Math.ceil(
-            Math.max(0, listContainerHeight - updatedAvailableHeight) / itemHeight
+            Math.max(0, listContainerHeight - availableHeight) / itemHeight
         );
-
+        
         setHiddenCount(result);
     }, [availableHeight]);
 
@@ -41,8 +40,8 @@ export const MOCEventList = (props: Props) => {
 
     const renderList = useMemo(() => list.reduce((acc, event, index) => {
         const isNotLast = list.length !== index + 1;
-        const mocEventKey = 'Event' + event.id;
-        const mocEventDividerKey = 'Divider' + event.id;
+        const mocEventKey = JSON.stringify(event);
+        const mocEventDividerKey = `Divider${mocEventKey}`;
 
         if (index < list.length - hiddenCount) {
             acc.push(<MOCEvent key={mocEventKey} data={event} ref={instance => {

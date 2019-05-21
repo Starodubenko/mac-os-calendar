@@ -1,5 +1,6 @@
 
 .Root{
+  box-sizing: border-box;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -51,4 +52,24 @@
 
 .NotCurrentMonth{
   color: #C5C5C5;
+}
+
+.TopBorder {
+  position: absolute;
+  height: 1px;
+  left: 0;
+  right: 0;
+  top: 0;
+  border-top: 1px solid #C8C8CD;
+  z-index: 1;
+}
+
+.RightBorder {
+  position: absolute;
+  width: 1px;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  border-right: 1px solid #C8C8CD;
+  z-index: 1;
 }

@@ -5,6 +5,7 @@ import { CalendarEvent } from '../MOCEvent';
 import { MOCSwitcher } from '../MOCSwitcher';
 
 import s from './MOCCalendarTable.module.scss';
+import { useResizeDimentions, MOCResizeableBlock } from '../MOCResizeableBlock';
 
 interface Props {
     
@@ -102,7 +103,7 @@ function getCellData(date: Moment, currentMonth: number, eventDataList: IApiEven
         isHoliday: isHoliday(date),
         isCurrentMonthDay: isCurrentMonthDay(date, currentMonth),
         isCurrentDay: isCurrentDay(date),
-        eventList: getEventList(date, convertVacationData(vacationData)),
+        eventList: getEventList(date, eventDataList),
     }
 }
 
@@ -140,6 +141,11 @@ function getCalendarCells(currentYearNumber: number,currentMonthNumber: number, 
 }
 
 export const MOCCalendarTable: FunctionComponent<Props> = (props) => {
+    const {height, width, onResizeHandler} = useResizeDimentions();
+    const dimensions = useMemo(() => ({
+        height: height / 6,
+        width: width / 7,
+    }), [height, width]);
     const [currentMonthYear, setCurrentMonthYear] = useState<Moment>(moment());
     const currentMonthYearRef = useRef<Moment>();
     useEffect(() => {
@@ -163,17 +169,10 @@ export const MOCCalendarTable: FunctionComponent<Props> = (props) => {
         return result;
     }, []);
 
-    const renderContent = useMemo(() => calendarCells.map(cellData => {
-        const rightBorder = !isLastWeekDay(cellData.date) && <div className={s.RightBorder}/>;
-
-        return (
-            <div className={s.Cell} key={JSON.stringify(cellData)}>
-                <div className={s.TopBorder}/>
-                {rightBorder}
-                <MOCCell key={cellData.date.toISOString()} data={cellData}/>
-            </div>
-        )
-    }), [calendarCells])
+    const renderContent = useMemo(() => 
+        calendarCells.map(cellData => <MOCCell data={cellData} dimensions={dimensions} key={JSON.stringify(cellData)}/>),
+        [calendarCells, dimensions]
+    )
 
     const switcherHandler = useCallback((value: number) => {
         const newDate = currentMonthYearRef.current.clone();
@@ -197,9 +196,9 @@ export const MOCCalendarTable: FunctionComponent<Props> = (props) => {
                     {renderTableHeader}
                 </div>
             </div>
-            <div className={s.Content}>
+            <MOCResizeableBlock className={s.Content} onResize={onResizeHandler}>
                 {renderContent}
-            </div>
+            </MOCResizeableBlock>
         </div>
     )
 };
