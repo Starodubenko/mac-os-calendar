@@ -34,7 +34,7 @@ export const MOCEventList = (props: Props) => {
     const itemRefs = [];
     const hiddenCount = useHiddenCount(
         list.length,
-        22 + 1, //todo to move into styled component props; +1 because of divider
+        16 + 1, //todo to move into styled component props; +1 because of divider
         allowedHeight
     );
 
